@@ -3,7 +3,7 @@
 Plugin Name: WP Theme Blocks (WTB)
 Plugin URI: http://semanticthoughts.com/wordpress/theme/blocks
 Description: manage small pieces of text and/or markup 
-Author: Viorel Cojocaru (vio@beanon.com)
+Author: Viorel Cojocaru
 Version: 0.0.2
 Author URI: http://semanticthoughts.com/
 */
