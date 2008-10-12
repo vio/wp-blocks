@@ -1,45 +1,163 @@
 <?php 
-/* 
-	List blocks
-	@todo - build new/edit links 
-	@todo - list features
-	- sort
-	- multiple select
-	- filter
-	- pagination
 
-*/
+// prepare links 
+$_link_add = "<a href=\"" . WTBADMIN . "&act=add\">add new</a>";
 
-	global $wpdb;
-	$_blocks = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "blocks ORDER BY block_ID DESC" );
+// include file 
+$_include_file = "";
+
+// get/set actions : add/edit/delete insert/update
+$_act = $_GET["act"];
+
+switch( $_act ) :
+
+	// add a new block
+	case "add" :
+		$_heading		= "/ Add block";
+		$_info			= "Add a new block of text and/or markup.";
+		$_include_file	= "block-add";
+	
+		break;
+		
+
+	// sql insert a new block	
+	case "insert" :
+		
+		// getting variables from POST
+		$_id			= $_POST[ "block_id" ];
+		$_name			= $_POST[ "block_name" ];
+		$_description	= $_POST[ "block_description" ];
+		$_content		= $_POST[ "block_content" ]	;
+		$_repeated		= $_POST[ "_REPEATED" ] ;
+
+		// do sql only if not repeated, else just load as index
+		if( !$_repeated ) :
+
+			// create & run sql statement 
+			$_insert = $wpdb->query( " INSERT INTO " . WTB_TABLE . " 
+				(block_name, block_description, block_content ) 
+				values(\"$_name\", \"$_description\", \"$_content\")" );	
+
+			// check if sql was inserted without errors
+			if( $_insert ) :
+				// insert true 
+				$_msg			= "New block <strong>added</strong>!";
+			else : 
+				$_error			= "Error!";
+
+				// render form again
+				$_heading		= "/ Add block";
+				$_info			= "Add a new block of text and/or markup.";
+				$_include_file	= "block-add";
+			endif; 
+			
+		endif;
+		
+		break;
+
+
+	// edit a block
+	case "edit" :
+		$_heading = "/ Edit block";
+		$_info			= "Edit block.";
+		$_include_file = "block-edit";
+
+		break;
+
+
+	// update block
+	case "update" :
+
+		// get id from POST  
+		$_id			= $_POST[ "block_id" ];
+		$_name			= $_POST[ "block_name" ];
+		$_description	= $_POST[ "block_description" ];
+		$_content		= $_POST[ "block_content" ]	;
+		$_repeated		= $_POST[ "_REPEATED" ] ;
+		
+		// create sql statement 
+		$_update = $wpdb->query( "UPDATE " . $wpdb->prefix . "blocks SET 
+			block_name = \"$_name\",
+			block_description = \"$_description\",
+			block_content = \"$_content\" 
+			 WHERE block_id = $_id
+			" );
+
+		if( $_update ) :
+			$_msg = "Block was <strong>updated</strong>!";
+			
+		elseif ( !$_update && $wpdb->last_error ) :
+			
+			$_error = "Error! <br /> Wordpress db error message:" . $wpdb->last_error ;
+
+			// render again edit form
+			$_heading = "/ Edit block";
+			$_info			= "Edit block.";
+			$_include_file = "block-edit";
+		endif;
+
+		break;
+
+
+	// delete block
+	case "delete" :
+
+		if ( $_GET["block_id"] != 0 ) :
+			$_id = $_GET["block_id"];
+
+			// run delete sql
+			$_deleted = $wpdb->query( "DELETE FROM " . $wpdb->prefix. "blocks WHERE block_id=$_id");
+			
+			// check status
+			if( $_deleted ) :
+				$_msg = "Block was <strong>deleted</strong> !";
+			else :
+				$_error = "Block was not <strong>deleted</strong> !" ;
+			endif;
+			
+		else:
+			$_error = "Nothing to delete ?!" ;
+		endif;
+
+		break;
+
+	default :
+
+endswitch;		
+
+// prepare heading  & messages
+
+	// if no heading we have to show default one 
+	if( !$_heading ) : $_heading = "( $_link_add )" ; endif; 
+	$_heading = "Manage blocks " . $_heading;
+
+	// if no info we will show the default one
+	if ( !$_info ) : $_info = "Manage snipetts of text and/or markup."; endif;
+	$_info = "<p>" . $_info . "</p>";
+
 ?>
 
 <div id="wpbody">
 	<div class="wrap">
-		<h2>Manage blocks (<a href="<?php echo WTBADMIN?>/edit.php">add new</a>)</h2>
 
-		<br class="clear" />
 
-		<table class="widefat">
-			<thead>
-				<tr>
-					<th class="check-column" scope="col"><!--<input type="checkbox"/>--></th>
-					<th scope="col">Name</th>
-					<th scope="col">Description</th>
-					<th scope="col" class="action-links">Action</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach($_blocks as $_block ) : ?>
-				<tr>
-					<th class="check-column" scope="row"><!--<input type="checkbox" value="xx" name="delete[]"/>--></th>
-					<td><a href="<?php echo WTBADMIN?>/edit.php&block_id=<?php echo $_block->block_ID?>" class="row-title"><?php echo $_block->block_name ?></a></td>
-					<td><?php echo $_block->block_description ?></td>
-					<td class="action-links"><a href="<?php echo WTBADMIN?>/delete.php&block_id=<?php echo $_block->block_ID?>" class="delete">Delete</a></td>
-				</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
+		<?php
+
+		// show WP style update message if any 
+		if ( $_msg ) :  echo "<div class=\"updated fade\"><p>$_msg</p></div>"; endif;
 		
+		// show WP style error message if any 
+		if ( $_error ) :  echo "<div class=\"error\" fade\"><p>$_error</p></div>"; endif;
+		?>
+
+		<h2><?php echo $_heading ?></h2>
+		<?php echo $_info ?>
+		
+		<?php 
+		// if we have a file to include will do so 
+		if( $_include_file ) : include( $_include_file . ".php" );	endif; 
+		?>
+
+		<?php include( "list.php" ); ?>	
 	</div>
 </div>
