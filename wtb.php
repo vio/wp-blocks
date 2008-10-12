@@ -2,9 +2,9 @@
 /*
 Plugin Name: WP Theme Blocks (WTB)
 Plugin URI: http://semanticthoughts.com/wordpress/theme/blocks
-Description: manage small pieces of text and/or markup 
+Description: WTB manage small pieces of text and/or markup from "Manage / Blocks" in Wordpress Admin 
 Author: Viorel Cojocaru
-Version: 0.5.0
+Version: 0.5.1
 Author URI: http://semanticthoughts.com/
 
 	@todo support for translated images

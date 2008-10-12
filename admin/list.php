@@ -1,7 +1,7 @@
 		<?php 
 		/* list all blocks */
 		global $wpdb;
-		$_blocks = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "blocks ORDER BY block_ID DESC" );
+		$_blocks = $wpdb->get_results( "SELECT block_ID, block_name, block_description FROM " . $wpdb->prefix . "blocks ORDER BY block_ID DESC" );
 		
 		$_link_delete_js = "onclick=\"if(!confirm('Delete block ?')) { return false; }\"";
 		$_link_edit = WTBADMIN . "&act=edit&block_id=";
