@@ -4,17 +4,22 @@ Plugin Name: WP Theme Blocks (WTB)
 Plugin URI: http://semanticthoughts.com/wordpress/theme/blocks
 Description: WTB manage small pieces of text and/or markup from "Manage / Blocks" in Wordpress Admin 
 Author: Viorel Cojocaru
-Version: 0.5.1
+Version: 0.5.2
 Author URI: http://semanticthoughts.com/
 
-	@todo support for translated images
-	@todo support for post/page content included blocks
-	@todo block admin - build new/edit links 
-	@todo block-list - list features
-		- sort
-		- multiple select
-		- filter
-		- pagination
+@todo support for translated images
+@todo support for post/page content included blocks
+@todo add settings panel for plugin
+	- uninstall function
+	- uninstall with/without removing DB
+@todo add enabled/disabled field
+@todo block admin - build new/edit links 
+@todo block-list - list features
+	- sort
+	- multiple select
+	- filter
+	- pagination
+
 */
 
 function wtb_install() {
@@ -75,8 +80,32 @@ function wtb_get_block( $block_name , $show = true ) {
 	endif;
 }
 
+/* 
+Search/replace  for blocks into the_content . Now only first found will be replaced !!!
+*/
+function wtb_the_content( $content ) {
 
-// setup plugin 
+	$_start_tag = "<!-- wtb";
+	$_end_tag	= "-->";
+
+	// get first and last position of start and end
+	$_fp = strpos( $content, $_start_tag);
+	$_lp = strpos( $content, $_end_tag, $_fp) ; 
+	
+	// get string between start and end tag 
+	$_block_name = trim(substr( $content, $_fp + strlen( $_start_tag ), $_lp - $_fp - strlen( $_start_tag ) ));
+
+	// doing replace 
+	if( $_block_name ) :
+		$content = substr_replace( $content, wtb_get_block( $_block_name, false), $_fp, $_lp ); 
+	endif;
+
+
+	echo $content;
+}
+
+
+// setup plugin  
 define( WTBPATH, ABSPATH . "/wp-content/plugins/wtb/" );				// path were plugin is installed
 define( WTBADMIN, "/wp-admin/edit.php?page=wtb/admin/index.php" );		// url for admin pages
 define( WTB_TABLE, $wpdb->prefix . "blocks" );							// wtb table name
@@ -90,5 +119,7 @@ register_activation_hook(WTBPATH . "wtb.php", 'wtb_install' );
 
 // add action to load pages
 add_action( 'admin_menu', 'wtb_add_menu' );
-	
+
+// check for blocks on content 
+add_filter( "the_content", "wtb_the_content" );
 ?>
