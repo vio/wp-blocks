@@ -4,7 +4,7 @@ Plugin Name: WP Theme Blocks (WTB)
 Plugin URI: http://semanticthoughts.com/wordpress/theme/blocks
 Description: WTB manage small pieces of text and/or markup from "Manage / Blocks" in Wordpress Admin 
 Author: Viorel Cojocaru
-Version: 0.5.2
+Version: 0.5.3
 Author URI: http://semanticthoughts.com/
 
 @todo support for translated images
@@ -85,22 +85,16 @@ Search/replace  for blocks into the_content . Now only first found will be repla
 */
 function wtb_the_content( $content ) {
 
-	$_start_tag = "<!-- wtb";
-	$_end_tag	= "-->";
+	// perl reg exp find/replace 
+	$content = preg_replace_callback ( 
+		"/<!-- wtb (\w+) -->/i", 
+		create_function(
+			'$_blocks',
+			'return wtb_get_block($_blocks[1], false);'
+		),
+		$content , -1, $count);
 
-	// get first and last position of start and end
-	$_fp = strpos( $content, $_start_tag);
-	$_lp = strpos( $content, $_end_tag, $_fp) ; 
-	
-	// get string between start and end tag 
-	$_block_name = trim(substr( $content, $_fp + strlen( $_start_tag ), $_lp - $_fp - strlen( $_start_tag ) ));
-
-	// doing replace 
-	if( $_block_name ) :
-		$content = substr_replace( $content, wtb_get_block( $_block_name, false), $_fp, $_lp ); 
-	endif;
-
-
+	// returning content
 	echo $content;
 }
 
@@ -122,4 +116,5 @@ add_action( 'admin_menu', 'wtb_add_menu' );
 
 // check for blocks on content 
 add_filter( "the_content", "wtb_the_content" );
+
 ?>
