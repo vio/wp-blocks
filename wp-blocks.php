@@ -100,7 +100,7 @@ function wtb_the_content( $content ) {
 
 
 // setup plugin  
-define( WTBPATH, ABSPATH . "/wp-content/plugins/wtb/" );				// path were plugin is installed
+define( WTBPATH, ABSPATH . "/wp-content/plugins/wp-blocks/" );				// path were plugin is installed
 define( WTBADMIN, "/wp-admin/edit.php?page=wtb/admin/index.php" );		// url for admin pages
 define( WTB_TABLE, $wpdb->prefix . "blocks" );							// wtb table name
 
