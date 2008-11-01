@@ -8,7 +8,7 @@
 		
 		?>
 		
-		<form action="<?php echo WTBADMIN?>&act=insert" method="post" class="validate">
+		<form action="<?php echo WTBADMIN?>&act=insert" method="post" class="add:the-list: validate">
 			
 			<?php include( "block-form.php" ); ?>
 			

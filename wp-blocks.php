@@ -1,24 +1,26 @@
 <?php
 /*
 Plugin Name: Wordpress Theme Blocks ( wp-blocks )
-Plugin URI: http://semanticthoughts.com/wordpress/plugins/wp-blocks
+Plugin URI: 
 Description: wp-blocks manage small pieces of text and/or markup
 Author: Viorel Cojocaru
-Version: 0.5.3
+Version: 0.6
 Author URI: http://semanticthoughts.com/
 
-@todo support for translated images
-@todo support for post/page content included blocks
-@todo add settings panel for plugin
-	- uninstall function
-	- uninstall with/without removing DB
-@todo add enabled/disabled field
-@todo block admin - build new/edit links 
-@todo block-list - list features
+@TODO- move identifier content into a variable and rename-it to WPB
+@TODO- internationalization
+@TODO- add WP JS validation
+@TODO- plugin uninstall function
+@TODO- keep database version in WP options
+@TODO- add enabled/disabled field
+@TODO- add Rich Text Editor
+@TODO- build new/edit links 
+@TODO- block-list - list features
 	- sort
 	- multiple select
 	- filter
 	- pagination
+
 
 */
 

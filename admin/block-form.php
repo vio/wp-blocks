@@ -5,7 +5,7 @@
 					<td>
 						<input type="text" name="block_name" area-required="true" value="<?php echo $_name?>" size="40" />
 						<br />
-						Used to interogate/display a particulary block
+						Used to interogate/display a particulary block. lowercase without spaces , <strong>e.g.: info_copyright </strong> 
 					</td>
 				</tr>
 				
@@ -14,7 +14,7 @@
 						<label>Block Description</label>
 					</th>
 					<td>
-						<textarea name="block_description" rows="3" cols="40"><?php echo $_description?></textarea>
+						<textarea name="block_description" rows="2" cols="75"><?php echo $_description?></textarea>
 						<br />
 						A short description for this block
 					</td>
