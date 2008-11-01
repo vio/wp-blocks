@@ -1,10 +1,10 @@
 		<?php 
 		/* list all blocks */
 		global $wpdb;
-		$_blocks = $wpdb->get_results( "SELECT block_ID, block_name, block_description FROM " . $wpdb->prefix . "blocks ORDER BY block_ID DESC" );
+		$_blocks = $wpdb->get_results( "SELECT block_ID, block_name, block_description FROM " . WPB_TABLE . " ORDER BY block_ID DESC" );
 		
 		$_link_delete_js = "onclick=\"if(!confirm('Delete block ?')) { return false; }\"";
-		$_link_edit = WTBADMIN . "&act=edit&block_id=";
+		$_link_edit = WPB_ADMIN . "&act=edit&block_id=";
 
 		?>
 		
@@ -21,7 +21,7 @@
 				<?php foreach($_blocks as $_block ) : ?>
 				<?php
 				// prepare delete link
-				$_link_delete = "<a href=\"" . WTBADMIN. "&act=delete&block_id=" . $_block->block_ID . "\" " . $_link_delete_js. ">Delete</a>";
+				$_link_delete = "<a href=\"" . WPB_ADMIN. "&act=delete&block_id=" . $_block->block_ID . "\" " . $_link_delete_js. ">Delete</a>";
 				?>
 
 				<tr>

@@ -24,14 +24,23 @@ Author URI: http://semanticthoughts.com/
 
 */
 
-function wtb_install() {
+
+// setup plugin's constants  
+define( WPB_EXP, 'wpb' );													// expression to look after on post/page content	
+define( WPB_PATH, ABSPATH . "/wp-content/plugins/wp-blocks/" );				// path were plugin is installed
+define( WPB_ADMIN, "/wp-admin/edit.php?page=wp-blocks/admin/index.php" );	// url for admin pages
+define( WPB_TABLE, $wpdb->prefix . "blocks" );								// table name
+
+
+// Wordpress Plugin Install
+function wpb_install() {
 	global $wpdb;
 
 	// check if table exists 
-	if( $wpdb->get_var("SHOW TABLES LIKE '" . WTB_TABLE . "'" ) != WTB_TABLE ) :
+	if( $wpdb->get_var("SHOW TABLES LIKE '" . WPB_TABLE . "'" ) != WPB_TABLE ) :
 
 		// create blocks table
-		$sql = "CREATE TABLE " . WTB_TABLE . " (
+		$sql = "CREATE TABLE " . WPB_TABLE . " (
 			  block_ID mediumint(9) NOT NULL AUTO_INCREMENT,	
 			  block_name tinytext NOT NULL,
 			  block_description text,
@@ -48,7 +57,7 @@ function wtb_install() {
 		$test_content = 'block content here';
 
 		// INSERT insert demo record into WP db	
-		$sql_insert = "INSERT INTO " . WTB_TABLE .
+		$sql_insert = "INSERT INTO " . WPB_TABLE .
 			" (block_name, block_description, block_content) " .
 			"VALUES (\"{$test_name}\", \"{$test_description}\",\"{$test_content}\" )";
 
@@ -59,9 +68,9 @@ function wtb_install() {
 		
 	}
 
-
-function wtb_add_menu() {
-	add_management_page('Blocks', 'Blocks', 5, WTBPATH . "admin/index.php" ); 
+// Add plugin admin page
+function wpb_add_menu() {
+	add_management_page('Blocks', 'Blocks', 5, WPB_PATH . "admin/index.php" ); 
 }
 
 
@@ -71,9 +80,9 @@ Show a particular block . Is used on theme files
 	show  - if is true will echo the result (default), else will return a string
 */
 
-function wtb_get_block( $block_name , $show = true ) {
+function wpb_get_block( $block_name , $show = true ) {
 	global $wpdb;
-	$_block = $wpdb->get_var( "SELECT block_content FROM " . WTB_TABLE . " WHERE block_name=\"$block_name\"" );
+	$_block = $wpdb->get_var( "SELECT block_content FROM " . WPB_TABLE . " WHERE block_name=\"$block_name\"" );
 
 	if( $show ) :
 		echo $_block;
@@ -82,41 +91,34 @@ function wtb_get_block( $block_name , $show = true ) {
 	endif;
 }
 
+
 /* 
-Search/replace  for blocks into the_content . Now only first found will be replaced !!!
+Search/replace  for blocks into the_content.
 */
-function wtb_the_content( $content ) {
+function wpb_the_content( $content ) {
 
 	// perl reg exp find/replace 
 	$content = preg_replace_callback ( 
-		"/<!-- wtb (\w+) -->/i", 
+		"/<!--" . WPB_EXP . " (\w+)-->/i", 
 		create_function(
 			'$_blocks',
-			'return wtb_get_block($_blocks[1], false);'
+			'return wpb_get_block( $_blocks[1], false );'
 		),
-		$content , -1, $count);
-
+		$content , -1, $count );
 	// returning content
 	echo $content;
 }
 
 
-// setup plugin  
-define( WTBPATH, ABSPATH . "/wp-content/plugins/wp-blocks/" );				// path were plugin is installed
-define( WTBADMIN, "/wp-admin/edit.php?page=wp-blocks/admin/index.php" );		// url for admin pages
-define( WTB_TABLE, $wpdb->prefix . "blocks" );							// wtb table name
-
+// add actions and filters to WP
 
 // install plugin
-register_activation_hook(WTBPATH . "wtb.php", 'wtb_install' );
-
-// uninstall pluggin 
-
+register_activation_hook(WPB_PATH . "wtb.php", 'wpb_install' );
 
 // add action to load pages
-add_action( 'admin_menu', 'wtb_add_menu' );
+add_action( 'admin_menu', 'wpb_add_menu' );
 
 // check for blocks on content 
-add_filter( "the_content", "wtb_the_content" );
+add_filter( "the_content", "wpb_the_content" );
 
 ?>

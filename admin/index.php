@@ -1,7 +1,7 @@
 <?php 
 
 // prepare links 
-$_link_add = "<a href=\"" . WTBADMIN . "&act=add\">add new</a>";
+$_link_add = "<a href=\"" . WPB_ADMIN . "&act=add\">add new</a>";
 
 // include file 
 $_include_file = "";
@@ -64,18 +64,18 @@ switch( $_act ) :
 		if( !$_repeated && !wpb_has_errors() ) :
 
 			// create & run sql statement 
-			$_insert = $wpdb->query( " INSERT INTO " . WTB_TABLE . " 
+			$_insert = $wpdb->query( " INSERT INTO " . WPB_TABLE . " 
 				(block_name, block_description, block_content ) 
 				values(\"$_name\", \"$_description\", \"$_content\")" );	
 
 			// check if sql was inserted without errors
 			if( $_insert ) :
-				// insert true 
 				$_msg			= "New block <strong>added</strong>!";
 			else : 
-				$wtb_errors[]	= 'SQL Error. Please check your data again';
+				$wpb_errors[]	= 'SQL Error. Please check your data again';
 
 			endif; 
+
 		elseif( wpb_has_errors() ):
 			
 			// render form again

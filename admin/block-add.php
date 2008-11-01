@@ -8,14 +8,14 @@
 		
 		?>
 		
-		<form action="<?php echo WTBADMIN?>&act=insert" method="post" class="add:the-list: validate">
+		<form action="<?php echo WPB_ADMIN?>&act=insert" method="post" class="add:the-list: validate">
 			
 			<?php include( "block-form.php" ); ?>
 			
 			<p class="submit">
 				<input type="submit" value="Add block" name="submit" class="button button-highlighted"/>
 				or
-				<a href="<?php echo WTBADMIN ?>" style="color: #777; font-weight: bold;">Cancel</a>
+				<a href="<?php echo WPB_ADMIN ?>" style="color: #777; font-weight: bold;">Cancel</a>
 			</p>
 		</form>
 		<br class="clear" />
