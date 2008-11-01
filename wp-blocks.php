@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: WP Theme Blocks (WTB)
-Plugin URI: http://semanticthoughts.com/wordpress/theme/blocks
-Description: WTB manage small pieces of text and/or markup from "Manage / Blocks" in Wordpress Admin 
+Plugin Name: Wordpress Theme Blocks ( wp-blocks )
+Plugin URI: http://semanticthoughts.com/wordpress/plugins/wp-blocks
+Description: wp-blocks manage small pieces of text and/or markup
 Author: Viorel Cojocaru
 Version: 0.5.3
 Author URI: http://semanticthoughts.com/
@@ -101,7 +101,7 @@ function wtb_the_content( $content ) {
 
 // setup plugin  
 define( WTBPATH, ABSPATH . "/wp-content/plugins/wp-blocks/" );				// path were plugin is installed
-define( WTBADMIN, "/wp-admin/edit.php?page=wtb/admin/index.php" );		// url for admin pages
+define( WTBADMIN, "/wp-admin/edit.php?page=wp-blocks/admin/index.php" );		// url for admin pages
 define( WTB_TABLE, $wpdb->prefix . "blocks" );							// wtb table name
 
 
