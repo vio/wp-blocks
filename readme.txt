@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== wp-blocks ===
 Contributors: vio
 Donate link: 
 Tags: theme, block
@@ -20,6 +20,9 @@ or add them directly to theme
 
 
 == History
+
+* Version 0.7
+	- plugin activate/deactivate
 
 * Version 0.6
 	- updated admin panel
