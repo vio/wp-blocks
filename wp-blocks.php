@@ -1,52 +1,52 @@
 <?php
-/*
-Plugin Name: Theme Blocks (wp-blocks)
-Plugin URI: 
-Description: manage small pieces of text and/or markup from Wordpress Admin
-Author: Viorel Cojocaru
-Version: 0.6.1
-Author URI: http://semanticthoughts.com/
-
-@TODO- move identifier content into a variable and rename-it to WPB
-@TODO- internationalization
-@TODO- add WP JS validation
-@TODO- keep database version in WP options
-@TODO- add enabled/disabled field
-@TODO- add Rich Text Editor
-@TODO- build new/edit links 
-@TODO- block-list - list features
-	- sort
-	- multiple select
-	- filter
-	- pagination
-
-
+/**
+ * Plugin Name: Theme Blocks (wp-blocks)
+ * Plugin URI: 
+ * Description: manage small pieces of text and/or markup from Wordpress Admin
+ * Author: Viorel Cojocaru
+ * Version: 0.6.1
+ * Author URI: http://semanticthoughts.com/
+ * 
+ * @package wp-blocks
+ *
+ * @global  string  WPB_EXP             Expression to look after on post/page content
+ * @global  string  WPB_PATH            Plugin path; used to build absolute paths for inclusion
+ * @global  string  WPB_ADMIN           Plugin admin url; used to build links for plugin admin area
+ * @global  string  WPB_TABLE           Table name
+ * @global  string  WPB_TABLE_VERSION   Table structure version
+ * 
+ * @todo    move identifier content into a variable and rename-it to WPB
+ * @todo    internationalization
+ * @todo    add WP JS validation
+ * @todo    keep database version in WP options
+ * @todo    add enabled/disabled field
+ * @todo    add Rich Text Editor
+ * @todo    build new/edit links 
+ * @todo    block-list - list features
+ * 	        - sort
+ * 	        - multiple select
+ * 	        - filter
+ * 	        - pagination
 */
 
 global $wpdb;
 
-
-/** 
- * Plugin constants
- *
- * @WPB_EXP : Expression to look after on post/page content
- * @WPB_PATH : Plugin path; used to build absolute paths for inclusion
- * @WPB_ADMIN : Plugin admin url; used to build links for plugin admin area
- * @WPB_TABLE : Sql table name
- */
-
-define( WPB_EXP,    'wpb' );
-define( WPB_PATH,   dirname(__FILE__) );
-define( WPB_ADMIN,  get_bloginfo( 'url') ."/wp-admin/edit.php?page=wp-blocks/admin/index.php" );
-define( WPB_TABLE,  $wpdb->prefix . "blocks" );
+define( WPB_EXP,            'wpb' );
+define( WPB_PATH,           dirname(__FILE__) );
+define( WPB_ADMIN,          get_bloginfo( 'url') ."/wp-admin/edit.php?page=wp-blocks/admin/index.php" );
+define( WPB_TABLE,          $wpdb->prefix . "blocks" );
+define( WPB_TABLE_VERSION,  "1" );
 
 
 /**
- * Show a particular block. Is used on theme files
- * @name  - block name as it is on db 
- * @show  - if is true will echo the result (default), else will return a string
+ * Get content of a particular block. Is used on theme files
+ * 
+ * @global  object    $wpdb
+ * @param   string    $name   Block name to search in wp_blocks table
+ * @param   boolean   $show   If is true will echo the result (default), else will return a string
+ * @return  text              Content of the block name found in wp_blocks table
+ *
  */
-
 function wpb_get_block( $block_name , $show = true ) {
 	global $wpdb;
 
@@ -62,6 +62,9 @@ function wpb_get_block( $block_name , $show = true ) {
 
 /**
  * Search/replace  for blocks into the_content.
+ *
+ * @param   text    $content  WP content passed by filter
+ * @return  text              WP content altered
  */
 function wpb_the_content( $content ) {
 
@@ -77,33 +80,42 @@ function wpb_the_content( $content ) {
 	echo $content;
 }
 
-/**
- * Register activation/deactivation plugin hook
- */
-register_activation_hook( __FILE__, 'wpb_activate' );
-register_deactivation_hook( __FILE__, 'wpb_deactivate' );
 
 
 /**
- * Add actions & Filters
+ * runs when activating WP-BLOCKS plugin
  */
-add_action( 'admin_menu', 'wpb_add_menu' );
-add_filter( 'the_content', 'wpb_the_content' );
-
-
 function wpb_activate() {
+  
+  // writting table structure version to WP option
+  add_option( 'wpb_table_version', WPB_TABLE_VERSION );
+  
+  // install SQL
 	wpb_install_sql();
 }
 
+
+/**
+ * Runs when deactivating WP-BLOCKS
+ */
 function wpb_deactivate() {
 	remove_action( 'admin_menu', 'wpb_add_menu' );
 	remove_filter( 'the_content', 'wpb_the_content' );
+  delete_option( 'wpb_table_version' );
 }
 
+
+/**
+ * Add WP-BLOCKS menu to WP Admin
+ */
 function wpb_add_menu() {
 	add_management_page('Blocks', 'Blocks', 5, "wp-blocks/admin/index.php" ); 
 }
 
+
+/**
+ * Install required sql table
+ */
 function wpb_install_sql() {
 	global $wpdb;
 
@@ -137,5 +149,21 @@ function wpb_install_sql() {
 
 	endif;
 	}
+
+
+/**
+ * Register activation/deactivation plugin hook
+ */
+register_activation_hook( __FILE__, 'wpb_activate' );
+register_deactivation_hook( __FILE__, 'wpb_deactivate' );
+
+/**
+ * Add actions & Filters
+ */
+add_action( 'admin_menu', 'wpb_add_menu' );
+add_filter( 'the_content', 'wpb_the_content' );
+
+
+
 
 ?>
