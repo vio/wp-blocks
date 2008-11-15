@@ -205,7 +205,7 @@ endswitch;
 		
 		<?php 
 		// if we have a file to include will do so 
-		if( $_include_file ) : include( $_include_file . ".php" );	endif; 
+		if( $_include_file ) : include( WPB_PATH . '/admin/'. $_include_file . ".php" );	endif; 
 		?>
 
 		<?php include( "list.php" ); ?>	

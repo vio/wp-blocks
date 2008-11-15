@@ -25,18 +25,26 @@ Author URI: http://semanticthoughts.com/
 
 global $wpdb;
 
-// setup plugin's constants  
-define( WPB_EXP, 'wpb' );													// expression to look after on post/page content	
-define( WPB_PATH, dirname(__FILE__) );								// path were plugin is installed
-define( WPB_ADMIN, "/wp-admin/edit.php?page=wp-blocks/admin/index.php" );	// url for admin pages
-define( WPB_TABLE, $wpdb->prefix . "blocks" );								// table name
 
-
-/*
- * Show a particular block . Is used on theme files
- *	name  - block name as it is on db 
- *	show  - if is true will echo the result (default), else will return a string
+/** 
+ * Plugin constants
  *
+ * @WPB_EXP : Expression to look after on post/page content
+ * @WPB_PATH : Plugin path; used to build absolute paths for inclusion
+ * @WPB_ADMIN : Plugin admin url; used to build links for plugin admin area
+ * @WPB_TABLE : Sql table name
+ */
+
+define( WPB_EXP,    'wpb' );
+define( WPB_PATH,   dirname(__FILE__) );
+define( WPB_ADMIN,  get_bloginfo( 'url') ."/wp-admin/edit.php?page=wp-blocks/admin/index.php" );
+define( WPB_TABLE,  $wpdb->prefix . "blocks" );
+
+
+/**
+ * Show a particular block. Is used on theme files
+ * @name  - block name as it is on db 
+ * @show  - if is true will echo the result (default), else will return a string
  */
 
 function wpb_get_block( $block_name , $show = true ) {
@@ -52,7 +60,7 @@ function wpb_get_block( $block_name , $show = true ) {
 }
 
 
-/* 
+/**
  * Search/replace  for blocks into the_content.
  */
 function wpb_the_content( $content ) {
@@ -64,38 +72,37 @@ function wpb_the_content( $content ) {
 			'$_blocks',
 			'return wpb_get_block( $_blocks[1], false );'
 		),
-		$content , -1, $count );
+		$content, -1, $count );
 	
-	// returning content
 	echo $content;
 }
 
-// Plugin activation and deactivation
+/**
+ * Register activation/deactivation plugin hook
+ */
 register_activation_hook( __FILE__, 'wpb_activate' );
 register_deactivation_hook( __FILE__, 'wpb_deactivate' );
 
 
+/**
+ * Add actions & Filters
+ */
+add_action( 'admin_menu', 'wpb_add_menu' );
+add_filter( 'the_content', 'wpb_the_content' );
+
+
 function wpb_activate() {
-
-	// add actions & filter
-	add_action( 'admin_menu', 'wpb_add_menu' );
-	add_filter( 'the_content', 'wpb_the_content' );
-
-	// install sql
 	wpb_install_sql();
 }
-
 
 function wpb_deactivate() {
 	remove_action( 'admin_menu', 'wpb_add_menu' );
 	remove_filter( 'the_content', 'wpb_the_content' );
 }
 
-
 function wpb_add_menu() {
-	add_management_page('Blocks', 'Blocks', 5, WPB_PATH . "/admin/index.php" ); 
+	add_management_page('Blocks', 'Blocks', 5, "wp-blocks/admin/index.php" ); 
 }
-
 
 function wpb_install_sql() {
 	global $wpdb;
@@ -112,8 +119,8 @@ function wpb_install_sql() {
 			  UNIQUE KEY block_ID ( block_ID )
 			);";
 
-		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-		dbDelta($sql);
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
 
 		// insert demo record
 		$test_name = "test_block";
@@ -130,6 +137,5 @@ function wpb_install_sql() {
 
 	endif;
 	}
-
 
 ?>
