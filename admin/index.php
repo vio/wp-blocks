@@ -73,7 +73,6 @@ switch( $_act ) :
 				$_msg			= "New block <strong>added</strong>!";
 			else : 
 				$wpb_errors[]	= 'SQL Error. Please check your data again';
-
 			endif; 
 
 		elseif( wpb_has_errors() ):
@@ -175,39 +174,35 @@ endswitch;
 
 ?>
 
-<div id="wpbody">
-	<div class="wrap">
+<div class="wrap">
+	<?php
 
-
-		<?php
-
-		// show WP style update message if any 
-		if ( $_msg ) :  echo "<div class=\"updated fade\"><p>$_msg</p></div>"; endif;
-		
-		// show WP style error message if any 
-		if ( $_errors_count = wpb_has_errors() ) : ?>
-		<div class="error">
-			<p>
-				<?php if( $_errors_count > 1 ):
-				echo 'Following errors occoured:';
-					foreach($wpb_errors as $_error ):
-						echo '<br/>' . $_error;
-					endforeach;
-				else: echo $wpb_errors[0]; endif; ?>
-			</p>
-		</div>
-		<?
-		endif;
-		?>
-
-		<h2><?php echo $_heading ?></h2>
-		<?php echo $_info ?>
-		
-		<?php 
-		// if we have a file to include will do so 
-		if( $_include_file ) : include( WPB_PATH . '/admin/'. $_include_file . ".php" );	endif; 
-		?>
-
-		<?php include( "list.php" ); ?>	
+	// show WP style update message if any 
+	if ( $_msg ) :  echo "<div class=\"updated fade\"><p>$_msg</p></div>"; endif;
+	
+	// show WP style error message if any 
+	if ( $_errors_count = wpb_has_errors() ) : ?>
+	<div class="error">
+		<p>
+			<?php if( $_errors_count > 1 ):
+			echo 'Following errors occoured:';
+				foreach($wpb_errors as $_error ):
+					echo '<br/>' . $_error;
+				endforeach;
+			else: echo $wpb_errors[0]; endif; ?>
+		</p>
 	</div>
+	<?
+	endif;
+	?>
+
+	<h2><?php echo $_heading ?></h2>
+	<?php echo $_info ?>
+	
+	<?php 
+	// if we have a file to include will do so 
+	if( $_include_file ) : include( WPB_PATH . '/admin/'. $_include_file . ".php" );	endif; 
+	?>
+
+	<?php include( "list.php" ); ?>	
 </div>

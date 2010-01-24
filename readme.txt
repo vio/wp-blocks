@@ -3,8 +3,8 @@ Contributors: vio
 Donate link: 
 Tags: theme, block
 Requires at least: 2.6.2
-Tested up to: 2.6.2
-Stable tag: 0.6.0
+Tested up to: 2.9.1
+Stable tag: 0.8.0
 
 == Description ==
 
@@ -20,6 +20,10 @@ or add them directly to theme
 
 
 == History
+
+* Version 0.8
+	- add plugin link to WP Admin Posts
+	- update admin layouts
 
 * Version 0.7
 	- plugin activate/deactivate

@@ -4,7 +4,7 @@
  * Plugin URI: 
  * Description: manage small pieces of text and/or markup from Wordpress Admin
  * Author: Viorel Cojocaru
- * Version: 0.6.1
+ * Version: 0.8
  * Author URI: http://semanticthoughts.com/
  * 
  * @package wp-blocks
@@ -81,16 +81,15 @@ function wpb_the_content( $content ) {
 }
 
 
-
 /**
  * runs when activating WP-BLOCKS plugin
  */
 function wpb_activate() {
   
-  // writting table structure version to WP option
-  add_option( 'wpb_table_version', WPB_TABLE_VERSION );
+	// writting table structure version to WP option
+	add_option( 'wpb_table_version', WPB_TABLE_VERSION );
   
-  // install SQL
+	// install SQL
 	wpb_install_sql();
 }
 
@@ -101,15 +100,15 @@ function wpb_activate() {
 function wpb_deactivate() {
 	remove_action( 'admin_menu', 'wpb_add_menu' );
 	remove_filter( 'the_content', 'wpb_the_content' );
-  delete_option( 'wpb_table_version' );
+	delete_option( 'wpb_table_version' );
 }
 
 
 /**
- * Add WP-BLOCKS menu to WP Admin
+ * Add WP-BLOCKS menu link to Wordpress Admin
  */
 function wpb_add_menu() {
-	add_management_page('Blocks', 'Blocks', 5, "wp-blocks/admin/index.php" ); 
+	add_posts_page('Blocks', 'Blocks', 5, "wp-blocks/admin/index.php" ); 
 }
 
 
@@ -162,8 +161,5 @@ register_deactivation_hook( __FILE__, 'wpb_deactivate' );
  */
 add_action( 'admin_menu', 'wpb_add_menu' );
 add_filter( 'the_content', 'wpb_the_content' );
-
-
-
 
 ?>
